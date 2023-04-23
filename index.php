@@ -5,7 +5,7 @@ session_start();
 
 $pdo = pdo_connect_mysql();
 
-$stmt = $pdo->query('SELECT *, DATE_FORMAT(created, "%M %D, %Y %h:%i %p") as created_formatted FROM `blog_post` ORDER BY `created` DESC LIMIT 5');
+$stmt = $pdo->query('SELECT *, DATE_FORMAT(created, "%M %D, %Y %h:%i %p") as created_formatted FROM `blog_post` WHERE `published` = 1 ORDER BY `created` DESC LIMIT 5');
 $blogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 

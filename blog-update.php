@@ -22,8 +22,10 @@ if (isset($_GET['id'])) {
     }
 
     if (!empty($_POST)) {
-        $stmt = $pdo->prepare('UPDATE `blog_post` SET `author_name`= ?,`title`= ?,`content`= ?, `published` = `published` + 1 WHERE `id` = ?');
-        $stmt->execute([$_POST['author_name'], $_POST['title'], $_POST['content'], $_GET['id']]);
+        $published = isset($_POST['published']) && $_POST['published'] == 'on' ? 1 : 0;
+
+        $stmt = $pdo->prepare('UPDATE `blog_post` SET `author_name`= ?,`title`= ?,`content`= ?, `published` = ? WHERE `id` = ?');
+        $stmt->execute([$_POST['author_name'], $_POST['title'], $_POST['content'], $published, $_GET['id']]);
         header('Location: blog-admin.php');
     }
 } else {
@@ -63,6 +65,13 @@ if (isset($_GET['id'])) {
         <label class="label">Content</label>
         <div class="control">
             <textarea name="content" class="textarea" required><?= $blog['content'] ?></textarea>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label checkbox">Publish</label>
+        <div class="control">
+            <input type="checkbox" name="published" <?= $blog['published'] ? 'checked' : '' ?>>
+            Publish
         </div>
     </div>
     <div class="field">

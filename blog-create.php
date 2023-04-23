@@ -13,8 +13,10 @@ if (!isset($_SESSION['loggedin'])) {
 $pdo = pdo_connect_mysql();
 
 if (!empty($_POST)) {
-    $stmt = $pdo->prepare('INSERT INTO `blog_post`(`author_name`, `title`, `content`) VALUES (?, ?, ?)');
-    $stmt->execute([$_POST['author_name'], $_POST['title'], $_POST['content']]);
+    $published = isset($_POST['published']) && $_POST['published'] == 'on' ? 1 : 0;
+
+    $stmt = $pdo->prepare('INSERT INTO `blog_post`(`author_name`, `title`, `content`, `published`) VALUES (?, ?, ?, ?)');
+    $stmt->execute([$_POST['author_name'], $_POST['title'], $_POST['content'], $published]);
     header('Location: blog-admin.php');
 }
 ?>
@@ -51,6 +53,13 @@ if (!empty($_POST)) {
         <label class="label">Content</label>
         <div class="control">
             <textarea name="content" class="textarea" placeholder="Content for your new blog post..." required></textarea>
+        </div>
+    </div>
+    <div class="field">
+        <label class="label checkbox">Publish</label>
+        <div class="control">
+            <input type="checkbox" name="published">
+            Publish
         </div>
     </div>
     <div class="field">
